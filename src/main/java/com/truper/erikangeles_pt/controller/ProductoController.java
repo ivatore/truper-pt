@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,9 +21,22 @@ public class ProductoController {
 
 	@Autowired
 	private ProductoRepo dao;
+	
+	@GetMapping("/{id}")
+	public ResponseEntity getProducto(@PathVariable int id) {
+
+		Optional<Producto> producto= Optional.of(dao.findOne(id));
+
+		if (producto.isPresent()) {
+			return new ResponseEntity<>(producto.get(), HttpStatus.OK);
+		}
+
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+	
 
 	@PutMapping("cambiaprecio/{id}")
-	public ResponseEntity putMethodName(@PathVariable int id, @RequestBody Producto producto) {
+	public ResponseEntity cambiaprecio(@PathVariable int id, @RequestBody Producto producto) {
 
 		Optional<Producto> producto_viejo = Optional.of(dao.findOne(id));
 
